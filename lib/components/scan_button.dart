@@ -38,7 +38,7 @@ class ScanButton extends StatefulWidget {
     int duration = 300,
     int count = 3,
   }) : super(key: key) {
-    _i18nData = i18nData;
+    _i18nData = i18nData ?? _i18nData;
     scanService.setupKeyAndIv(cryptoKey, cryptoIV);
     scanService.setupHTTPDurationAndCount(duration, count);
   }

@@ -7,8 +7,8 @@ class CryptoService {
   CryptoService();
 
   void setupKeyAndIv(String key, String iv) {
-    _key = key;
-    _iv = iv;
+    _key = key ?? _key;
+    _iv = iv ?? _iv;
   }
 
   Future<String> decrypt(String plainText) async {
