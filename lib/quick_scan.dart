@@ -1,13 +1,19 @@
-import 'dart:async';
-
-import 'package:flutter/services.dart';
+import 'components/scan_button.dart';
 
 class QuickScan {
-  static const MethodChannel _channel =
-      const MethodChannel('quick_scan');
-
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  ScanButton getButton({
+    Map<String, String> i18nData,
+    String cryptoKey = '0000000000000000',
+    String cryptoIV = '0000000000000000',
+    int duration = 300,
+    int count = 3,
+  }) {
+    return new ScanButton(
+      i18nData: i18nData,
+      cryptoKey: cryptoKey,
+      cryptoIV: cryptoIV,
+      duration: duration,
+      count: count,
+    );
   }
 }
