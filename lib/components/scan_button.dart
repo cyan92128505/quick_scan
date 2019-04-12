@@ -94,7 +94,6 @@ class _ScanButtonState extends State<ScanButton> {
         ),
       ),
     );
-    ;
   }
 
   Future scan(BuildContext context) async {
