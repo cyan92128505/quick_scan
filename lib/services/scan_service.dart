@@ -61,6 +61,9 @@ class ScanService {
     Completer apiCaller = new Completer();
     try {
       ApiOption apiOption = await _parseUri(link);
+      if (apiOption == null) {
+        throw null;
+      }
 
       CustomResponse response =
           await _execApi(this._deviceId, apiOption, this._deviceName);
@@ -71,15 +74,15 @@ class ScanService {
         await launch('${apiOption.url}');
       }
 
-      if (response.statusCode == 999) {
-        throw null;
-      }
-
       apiCaller.complete(Future(() => response.statusCode.toString()));
     } catch (e) {
-      apiCaller.complete(Future(() => link));
-      if (await canLaunch('$link')) {
-        await launch('$link');
+      String _result = '404';
+      if ((link.contains('charon') == false)) {
+        _result = link;
+      }
+      apiCaller.complete(Future(() => _result));
+      if (await canLaunch('$_result')) {
+        await launch('$_result');
       }
     }
 
@@ -94,7 +97,7 @@ class ScanService {
       fragment = await cryptoService.decrypt(uri.fragment);
       json = jsonDecode(fragment);
     } catch (e) {
-      json = {'url': 'undefind', 'key': link, 'type': 1};
+      return null;
     }
 
     ApiOption _apiOption = new ApiOption.generate(
@@ -127,13 +130,7 @@ class ScanService {
             'key': apiOption.key,
             'token': apiOption.token,
           };
-    if (apiOption.url == 'undefind') {
-      return Future(() {
-        _customResponse.data = apiOption.key;
-        _customResponse.statusCode = 999;
-        return _customResponse;
-      });
-    }
+
     return HttpService()
         .exec(apiOption.url, _option, _duration, _count)
         .then((result) {
