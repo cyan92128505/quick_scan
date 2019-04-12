@@ -29,6 +29,15 @@ Map<String, String> _i18nData = {
   LangKey.startText: 'START',
 };
 
+class ButtonOption {
+  double elevation = 4;
+  Color color = Colors.cyan;
+  Color textColor = Colors.white;
+  Color splashColor = Colors.cyanAccent;
+}
+
+ButtonOption _buttonOption = new ButtonOption();
+
 class ScanButton extends StatefulWidget {
   ScanButton({
     Key key,
@@ -37,8 +46,10 @@ class ScanButton extends StatefulWidget {
     String cryptoIV,
     int duration = 300,
     int count = 3,
+    ButtonOption buttonOption,
   }) : super(key: key) {
     _i18nData = i18nData ?? _i18nData;
+    _buttonOption = buttonOption ?? _buttonOption;
     scanService.setupKeyAndIv(cryptoKey, cryptoIV);
     scanService.setupHTTPDurationAndCount(duration, count);
   }
@@ -58,25 +69,25 @@ class _ScanButtonState extends State<ScanButton> {
 
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width * 0.9;
     return RaisedButton(
-      elevation: 4,
-      color: Colors.cyan,
-      textColor: Colors.white,
-      splashColor: Colors.cyanAccent,
+      elevation: _buttonOption.elevation,
+      color: _buttonOption.color,
+      textColor: _buttonOption.textColor,
+      splashColor: _buttonOption.splashColor,
       onPressed: () {
         scan(context);
       },
-      padding: EdgeInsets.all(10),
       shape: CircleBorder(
         side: BorderSide(
           style: BorderStyle.solid,
-          color: Colors.cyan,
+          color: _buttonOption.color,
         ),
       ),
       child: Center(
         child: SizedBox(
-          width: 200,
-          height: 200,
+          width: _width,
+          height: _width,
           child: CustomPaint(
             painter: ScanIcon(),
           ),
