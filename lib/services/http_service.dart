@@ -14,7 +14,8 @@ class HttpService {
       new Client(),
       retries: count,
       delay: (r) => new Duration(milliseconds: duration),
-      when: (response) => response.statusCode == 404,
+      when: (response) =>
+          response.statusCode == 404 || response.statusCode == 500,
       whenError: (dynamic error, StackTrace stackTrace) {
         print(stackTrace);
         return true;

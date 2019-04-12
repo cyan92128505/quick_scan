@@ -5,7 +5,6 @@ import 'dart:io' show Platform;
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:http/http.dart';
 
 import 'package:quick_scan/models/api_option.dart';
 import 'package:quick_scan/services/device_service.dart';
@@ -48,12 +47,40 @@ class ScanService {
 
     try {
       String barcode = await BarcodeScanner.scan();
-      print(barcode);
       deepLink(barcode, false).then(
         (response) => apiCaller.complete(response),
       );
     } catch (e) {
       print('Scan Method Unknown error: $e');
+    }
+
+    return apiCaller.future;
+  }
+
+  Future deepLink(String link, bool needReturnBrowser) async {
+    Completer apiCaller = new Completer();
+    try {
+      ApiOption apiOption = await _parseUri(link);
+
+      CustomResponse response =
+          await _execApi(this._deviceId, apiOption, this._deviceName);
+
+      if (needReturnBrowser &&
+          Platform.isAndroid &&
+          await canLaunch('${apiOption.url}')) {
+        await launch('${apiOption.url}');
+      }
+
+      if (response.statusCode == 999) {
+        throw null;
+      }
+
+      apiCaller.complete(Future(() => response.statusCode.toString()));
+    } catch (e) {
+      apiCaller.complete(Future(() => link));
+      if (await canLaunch('$link')) {
+        await launch('$link');
+      }
     }
 
     return apiCaller.future;
@@ -67,7 +94,7 @@ class ScanService {
       fragment = await cryptoService.decrypt(uri.fragment);
       json = jsonDecode(fragment);
     } catch (e) {
-      return null;
+      json = {'url': 'undefind', 'key': link, 'type': 1};
     }
 
     ApiOption _apiOption = new ApiOption.generate(
@@ -83,36 +110,12 @@ class ScanService {
     return _apiOption;
   }
 
-  Future deepLink(String link, bool needReturnBrowser) async {
-    Completer apiCaller = new Completer();
-    try {
-      ApiOption apiOption = await _parseUri(link);
-
-      Response response =
-          await _execApi(this._deviceId, apiOption, this._deviceName);
-
-      if (needReturnBrowser &&
-          Platform.isAndroid &&
-          await canLaunch('${apiOption.url}')) {
-        await launch('${apiOption.url}');
-      }
-
-      apiCaller.complete(Future(() => response.statusCode.toString()));
-    } catch (e) {
-      apiCaller.complete(Future(() => link));
-      if (await canLaunch('$link')) {
-        await launch('$link');
-      }
-    }
-
-    return apiCaller.future;
-  }
-
-  Future _execApi(
+  Future<CustomResponse> _execApi(
     String deviceId,
     ApiOption apiOption,
     String deviceName,
   ) {
+    CustomResponse _customResponse = CustomResponse();
     Map<String, dynamic> _option = apiOption.type == 1
         ? {
             'deviceName': deviceName,
@@ -124,14 +127,24 @@ class ScanService {
             'key': apiOption.key,
             'token': apiOption.token,
           };
-
-    var response = new HttpService().exec(
-      apiOption.url,
-      _option,
-      _duration,
-      _count,
-    );
-
-    return response;
+    if (apiOption.url == 'undefind') {
+      return Future(() {
+        _customResponse.data = apiOption.key;
+        _customResponse.statusCode = 999;
+        return _customResponse;
+      });
+    }
+    return HttpService()
+        .exec(apiOption.url, _option, _duration, _count)
+        .then((result) {
+      _customResponse.data = result.body;
+      _customResponse.statusCode = result.statusCode;
+      return _customResponse;
+    });
   }
+}
+
+class CustomResponse {
+  String data = '';
+  int statusCode = 404;
 }
