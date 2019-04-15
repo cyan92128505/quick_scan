@@ -16,8 +16,6 @@ PODS:
     - Flutter
   - url_launcher (0.0.1):
     - Flutter
-  - vibration (1.0.1):
-    - Flutter
 
 DEPENDENCIES:
   - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
@@ -27,7 +25,6 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - quick_scan (from `.symlinks/plugins/quick_scan/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
-  - vibration (from `.symlinks/plugins/vibration/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -49,8 +46,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/quick_scan/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
-  vibration:
-    :path: ".symlinks/plugins/vibration/ios"
 
 SPEC CHECKSUMS:
   barcode_scan: 33f586d02270046fc6559135038b34b5754eaa4f
@@ -62,7 +57,6 @@ SPEC CHECKSUMS:
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
   quick_scan: b22037532f8c516da951b01899f0d9b382d08dcd
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
-  vibration: a7d27a218bb2283de3b294e7cd26dbe7b1ca9c8a
 
 PODFILE CHECKSUM: ebd43b443038e611b86ede96e613bd6033c49497
 

@@ -38,12 +38,6 @@ dependencies:
       url: git://github.com/cyan92128505/cipher2.git
       ref: master
 
-  # 震動
-  vibration:
-    git:
-      url: git://github.com/cyan92128505/flutter_vibration.git
-      ref: master
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

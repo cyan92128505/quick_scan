@@ -1,7 +1,11 @@
 package com.gmdigi.charon_app.quick_scan
 
 import android.content.Intent
+import android.content.Context;
 import android.util.Log
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+
 import com.gmdigi.charon_app.quick_scan.Util.API
 import com.gmdigi.charon_app.quick_scan.Util.MESSAGE_TYPE
 import com.gmdigi.charon_app.quick_scan.Enity.MessageSet
@@ -41,25 +45,35 @@ class QuickScanPlugin : MethodCallHandler, PluginRegistry.NewIntentListener {
             eventchannel.setStreamHandler(CommonStreamHandler())
 
             MethodChannel(registrar.messenger(), "charon_ready").setMethodCallHandler { call, result ->
-                if (call.method.equals("charon_ready_invoke")) {
-                    instance.demoFunction(result, call)
-                } else {
-                    result.notImplemented()
+                when{
+                    call.method.equals("charon_ready_invoke") ->instance.invokeFunction(result)
+                    call.method.equals("charon_vibrate") ->instance.vibrateFunction(result, registrar.context())
+                    else -> result.notImplemented()
                 }
             }
         }
-
-
-
     }
 
-    fun demoFunction(result: MethodChannel.Result, call: MethodCall) {
+    fun invokeFunction(result: MethodChannel.Result) {
         Log.v(Companion.TAG, "ready")
         if (Config.notification_msg != null) {
             result.success(API.getmsg_call(Config.notification_msg!!))
         } else {
             result.notImplemented()
         }
+    }
+
+    fun vibrateFunction(result: MethodChannel.Result, context: Context){
+        val vibrator: Vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if(vibrator.hasVibrator()){
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE)
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                vibrator.vibrate(300)
+            }
+        }
+        result.success("VibrationEffect!!");
     }
 
 

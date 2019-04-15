@@ -6,6 +6,7 @@ class EventSet {
   static const EVENT_CHANNEL = 'charon_event_channel';
   static const DEEP_LINK = 'charon.deep.link';
   static const NOTIFICATION = 'charon_notification';
+  static const VIBRATE = 'charon_vibrate';
 
   static Map<String, dynamic> decode(String nativeMessage) {
     return jsonDecode(nativeMessage);

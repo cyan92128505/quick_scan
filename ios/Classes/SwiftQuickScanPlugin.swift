@@ -1,11 +1,13 @@
 import Flutter
 import UIKit
+import AudioToolbox
 
 enum EventSet: String {
     case READY = "charon_ready"
     case READY_INVOKE = "charon_ready_invoke"
     case EVENT_CHANNEL = "charon_event_channel"
     case DEEP_LINK = "charon.deep.link"
+    case VIBRATE = "charon_vibrate"
 }
 
 public class SwiftQuickScanPlugin: NSObject, FlutterPlugin, FlutterStreamHandler{
@@ -41,9 +43,13 @@ public class SwiftQuickScanPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
 
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if call.method == "\(EventSet.READY_INVOKE.rawValue)" {
+        switch (call.method) {
+        case "\(EventSet.READY_INVOKE.rawValue)":
             result("Hello from iOS")
-        } else {
+        case "\(EventSet.VIBRATE.rawValue)":
+            AudioServicesPlaySystemSound(1520)
+            result(nil)
+        default:
             result(FlutterMethodNotImplemented)
         }
     }
