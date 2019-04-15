@@ -86,8 +86,8 @@ class _ScanButtonState extends State<ScanButton> {
       ),
       child: Center(
         child: SizedBox(
-          width: _width,
-          height: _width,
+          width: _width * 0.9,
+          height: _width * 0.9,
           child: CustomPaint(
             painter: ScanIcon(),
           ),
