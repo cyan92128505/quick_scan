@@ -21,8 +21,17 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: QuickScan().getButton(),
+        body: Builder(
+          builder: (BuildContext context) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: QuickScan().getButton()),
+                ],
+              ),
         ),
       ),
     );
