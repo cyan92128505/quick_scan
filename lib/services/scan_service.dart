@@ -106,7 +106,7 @@ class ScanService {
       type: json['type'],
     );
 
-    if (json['type'] == '2') {
+    if (json['type'] == 2) {
       _apiOption.token = json['token'];
     }
 
