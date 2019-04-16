@@ -13,7 +13,7 @@ class HttpService {
     RetryClient client = new RetryClient(
       new Client(),
       retries: count,
-      delay: (r) => new Duration(milliseconds: duration),
+      delay: (r) => new Duration(milliseconds: duration),  
       when: (response) =>
           response.statusCode == 404 || response.statusCode == 500,
       whenError: (dynamic error, StackTrace stackTrace) {
@@ -29,7 +29,7 @@ class HttpService {
     );
 
     Response response = await client.post(path, body: data);
-
+    print(response.body);
     client.close();
 
     return response;

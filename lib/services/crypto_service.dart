@@ -13,7 +13,9 @@ class CryptoService {
 
   Future<String> decrypt(String plainText) async {
     try {
-      return await Cipher2.decryptAesCbc128Padding7(plainText, _key, _iv);
+      var str = await Cipher2.decryptAesCbc128Padding7(plainText, _key, _iv);
+      print(str);
+      return str;
     } catch (e) {
       return Future(() => '');
     }
