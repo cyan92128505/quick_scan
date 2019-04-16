@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 
@@ -69,9 +70,11 @@ class ScanService {
           await _execApi(this._deviceId, apiOption, this._deviceName);
 
       if (needReturnBrowser &&
-          Platform.isAndroid &&
-          await canLaunch('${apiOption.url}')) {
-        await launch('${apiOption.url}');
+          Platform.isAndroid /* &&
+          await canLaunch('${apiOption.url}')*/) {
+        // await launch('${apiOption.url}');
+        needReturnBrowser = false;
+        SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       }
 
       apiCaller.complete(Future(() => response.statusCode.toString()));
